@@ -17,7 +17,7 @@ class Scatter:
         data = Scatter.load_csv("data.csv")
         x = data[:, 0]
         y = data[:, 1]
-        print(x,y)
+        print(x, y)
 
 
 
