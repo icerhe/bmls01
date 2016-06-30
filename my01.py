@@ -16,7 +16,7 @@ class Scatter:
         os.path.dirname(os.path.realpath(__file__)), "charts")
 
     zhfont = mpl.font_manager.FontProperties(
-        fname='/usr/share/fonts/truetype/MSYHMONO.ttf')
+        fname='/usr/share/fonts/winf/YaHei.Consolas.1.12.ttf')
 
     colors = ['g', 'k', 'b', 'm', 'r']
 
@@ -24,17 +24,19 @@ class Scatter:
 
     def gen_char01(self):
         # load file
-        data = Scatter.load_csv("data.csv")
+        data = Scatter.load_csv("dyb_reserve.csv")
         x = data[:, 0]
         y = data[:, 1]
+        x = x[~(x > 400)]
+        y = y[~(x > 400)]
         print(x, y)
 
-        fp1, res1, rank1, sv1, rcond1 = sp.polyfit(x, y, 1, full=True)
+        fp1, res1, rank1, sv1, rcond1 = sp.polyfit(x, y, 10, full=True)
         print("Model parameters of fp1: %s" % fp1)
         print("Error of the model of fp1:", res1)
         f1 = sp.poly1d(fp1)
 
-        Scatter.plot_models(x, y, [f1], "haha")
+        Scatter.plot_models(x, y, [f1], "chart02")
 
     @staticmethod
     def load_csv(csv_file_name):
@@ -46,14 +48,14 @@ class Scatter:
         plt.figure(num=None, figsize=(8,6))
         plt.clf()
         plt.scatter(x, y, s=10)
-        plt.title("猪个哇哇", fontproperties=Scatter.zhfont)
-        plt.xlabel("x")
-        plt.ylabel("y")
-        plt.xlim(0,10)
-        plt.ylim(0,1000)
+        plt.title("重量/价格关系表", fontproperties=Scatter.zhfont)
+        plt.xlabel("weight")
+        plt.ylabel("price")
+        #plt.xlim(0,10)
+        #plt.ylim(0,1000)
         if models:
             if mx is None:
-                mx = sp.linspace(0, x[-1], 1000)
+                mx = sp.linspace(0, 400, 500)
             for model, style, color in zip(models, Scatter.linestyles, Scatter.colors):
                 # print "Model:",model
                 # print "Coeffs:",model.coeffs
@@ -63,8 +65,8 @@ class Scatter:
 
         plt.autoscale(tight=True)
         plt.grid(True, linestyle='-', color='0.75')
-
         plt.show()
+        #plt.savefig(os.path.join(Scatter.chartDir, outfile))
 
 sc = Scatter()
 sc.gen_char01()
